@@ -358,6 +358,12 @@ rolling_dens <- map(rolling_dens, ~left_join(.x, unique_pts, by = join_by(Lat, L
 
 
 ##### Save Unique Locations  #### 
+if(exists(here::here("Data/spatial"))){
+  write_csv(unique_pts, here::here("Data/spatial/unique_location_coords.csv"))
+} else {
+  dir.create(here::here("Data/spatial"), recursive = TRUE)
+  write_csv(all_density_results, here::here("Data/spatial/unique_location_coords.csv"))
+}
 # write_csv(unique_pts, here::here("Data/spatial/unique_location_coords.csv"))
 
 
@@ -372,7 +378,13 @@ all_density_results <- rolling_dens %>%
 
 
 # Save here, and split the subroutines off into their own scripts
-write_csv(all_density_results, here::here("Data/projections/VAST_all_densities_all_species.csv"))
+# Save the baseline average densities
+if(exists(here::here("Data/projections"))){
+  write_csv(all_density_results, here::here("Data/projections/VAST_all_densities_all_species.csv"))
+} else {
+  dir.create(here::here("Data/projections"), recursive = TRUE)
+  write_csv(all_density_results, here::here("Data/projections/VAST_all_densities_all_species.csv"))
+}
 
 
 
@@ -470,13 +482,8 @@ densities_baseline_preroll <- density_estimates %>%
   },.id = "VAST_id") %>%
   left_join(unique_pts, join_by(Lat, Lon))
 
-
-
 # Save the baseline average densities
 write_csv(densities_baseline_preroll, here::here("Data/projections/VAST_baseline_2010to2019_densities_all_species.csv"))
-
-
-
 
 
 
